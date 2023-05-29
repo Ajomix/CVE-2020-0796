@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <title>Workgroup Environment Network Setup</title>
+    <style>
+        table, th, td
+        {
+            border:0.0625rem solid black;
+            border-collapse:collapse;
+        }
+        div.Title
+        {
+            font-family:Arial;
+            font-size:larger;
+            margin-bottom:0.625rem;
+        }
+        div.Context
+        {
+            font-family:'Segoe UI';
+            font-size:medium;
+            margin-top:auto;
+            height: 15.4375rem;
+        }
+        .icon
+        {
+            font-family:'Segoe UI';
+            font-size:larger;
+            font-weight:bold;
+            margin-top:5rem;
+        }
+        .List
+        {
+            margin-top: 0.25rem;
+        }
+        .img
+        {
+            vertical-align:text-top;
+            margin-top: 0rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="Context">
+        The cross realm environment requires interactions between the following computers and domain controllers. <br />
+        <ul class="List">
+            <li>The driver computer runs the test cases by sending requests over the wire in the form of protocol messages. </li>
+            <li>The local realm controller runs an implementation of the protocol that is being tested, which responds to the requests that the driver computer sends.</li>
+            <li>The trust realm controller runs an implementation of the protocol that is being tested. which responds to the requests that the driver computer sends.</li>            
+        </ul>
+        The cross realm environment may need interactions between the driver computer and application server roles. <br />
+        <ul class="List">
+            <li>The SMB, http or Ldap server in local realm runs an application protocols depends on Kerberos.</li>
+            <li>The SMB, http or Ldap server in trust realm runs an application protocols depends on Kerberos.</li>
+        </ul>
+        <div class="Context">
+            <div style="font-weight:600"><img class="img" src="note.png"/>Note</div>
+            &nbsp;&nbsp;&nbsp;&nbsp;Below part applies both Windows based computers and Non-Windows based computers in the test environment.
+            <br />
+            <br />
+                <img class="img" src="cross-realm-IP.png" /><div class="icon">
+                &nbsp;</div>
+            </div>
+        </div>     
+</body>
+</html>

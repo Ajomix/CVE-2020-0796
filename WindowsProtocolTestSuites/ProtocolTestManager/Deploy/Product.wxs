@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?define SRCDIR=$(env.TestSuiteRoot)\drop\ProtocolTestManager?>
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*"
+           Name="Protocol Test Manager"
+           Language="1033"
+           Version="$(env.TESTSUITE_VERSION)"
+           Manufacturer="Microsoft Corporation"
+           UpgradeCode="4ee979ed-648b-478b-aca0-08718499a95e">
+    <Package InstallerVersion="200"
+             Compressed="yes"
+             InstallScope="perMachine"
+             Description="Protocol Test Manager v$(env.TESTSUITE_VERSION)"/>
+
+    <Upgrade Id="4ee979ed-648b-478b-aca0-08718499a95e">
+      <UpgradeVersion OnlyDetect="no" Property="PREVIOUSFOUND"
+        Minimum="1.0.0.0"  IncludeMinimum="yes"
+        Maximum="99.99.99.99" IncludeMaximum="no" />
+    </Upgrade>
+
+    <CustomAction Id="PreventDowngrading" Error="A newer version of [ProductName] is already installed." />
+    <InstallExecuteSequence>
+      <RemoveExistingProducts After="InstallInitialize" />
+    </InstallExecuteSequence>
+
+
+    <Media Id="1" Cabinet="ProtocolTestManager.cab" EmbedCab="yes" />
+
+    <Feature Id="PTM_Feature"
+             Title="Protocol Test Manager"
+             Description="Protocol Test Manager"
+             Level="1">
+      <ComponentGroupRef Id="ProductComponents_bin" />
+      <ComponentGroupRef Id="ProductComponents_etc" />
+      <ComponentGroupRef Id="ProductComponents_ProtoSDK" />
+      <ComponentGroupRef Id="fileserver_PLUGIN"/>
+      <ComponentGroupRef Id="SMBD_PLUGIN"/>
+      <ComponentGroupRef Id="KERBEROS_PLUGIN"/>
+      <ComponentGroupRef Id="ADFAMILY_PLUGIN"/>
+      <ComponentGroupRef Id="BRANCHCACHE_PLUGIN"/>
+      <ComponentGroupRef Id="RDPCLIENT_PLUGIN"/>
+      <ComponentGroupRef Id="RDPSERVER_PLUGIN"/>
+      <ComponentGroupRef Id="AZOD_PLUGIN" />
+      <ComponentGroupRef Id="ADOD_PLUGIN" />
+      <ComponentGroupRef Id="ADFSPIP_PLUGIN" />
+      <ComponentRef Id="ApplicationShortcut"/>
+      <ComponentRef Id="DesktopShortcuts"/>
+    </Feature>
+
+    <WixVariable Id="WixUILicenseRtf" Value="License.rtf" />
+
+    <!-- Visual Studio dependency check-->
+    <PropertyRef Id="VS2017_ROOT_FOLDER" />
+    <PropertyRef Id="VS2019_ROOT_FOLDER" />
+    <Property Id="VSTEST">
+      <DirectorySearch Id="Vs2019VsTestSearch" Path="[VS2019_ROOT_FOLDER]\Common7\IDE\CommonExtensions\Microsoft\TestWindow\">
+        <FileSearch Name="vstest.console.exe" />
+      </DirectorySearch>
+      <DirectorySearch Id="Vs2017VsTestSearch" Path="[VS2017_ROOT_FOLDER]\Common7\IDE\CommonExtensions\Microsoft\TestWindow\">
+        <FileSearch Name="vstest.console.exe" />
+      </DirectorySearch>
+    </Property>
+    
+    <SetProperty Id="VSInstalled" After="AppSearch" Value="1">
+      <![CDATA[VSTEST]]>
+    </SetProperty>
+
+    <!-- Progress Texts for UI -->
+    <UIRef Id="WixUI_ErrorProgressText" />
+
+    <UI Id="WixUI_FeatureTree">
+      <TextStyle Id="WixUI_Font_Normal" FaceName="Tahoma" Size="8" />
+      <TextStyle Id="WixUI_Font_Bigger" FaceName="Tahoma" Size="12" />
+      <TextStyle Id="WixUI_Font_Title" FaceName="Tahoma" Size="9" Bold="yes" />
+
+      <Property Id="DefaultUIFont" Value="WixUI_Font_Normal" />
+      <Property Id="WixUI_Mode" Value="FeatureTree" />
+
+      <DialogRef Id="ErrorDlg" />
+      <DialogRef Id="FatalError" />
+      <DialogRef Id="FilesInUse" />
+      <DialogRef Id="MsiRMFilesInUse" />
+      <DialogRef Id="PrepareDlg" />
+      <DialogRef Id="ProgressDlg" />
+      <DialogRef Id="ResumeDlg" />
+      <DialogRef Id="UserExit" />
+
+      <Publish Dialog="ExitDialog" Control="Finish" Event="EndDialog" Value="Return" Order="999">1</Publish>
+
+      <Publish Dialog="WelcomeDlg" Control="Next" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+
+      <Publish Dialog="LicenseAgreementDlg" Control="Back" Event="NewDialog" Value="WelcomeDlg">1</Publish>
+      <Publish Dialog="LicenseAgreementDlg" Control="Next" Event="NewDialog" Value="PrivacyDlg">LicenseAccepted = "1"</Publish>
+
+      <Publish Dialog="PrivacyDlg" Control="Cancel" Event="EndDialog" Value="Return">1</Publish>
+      <Publish Dialog="PrivacyDlg" Control="Next" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+      <Publish Dialog="PrivacyDlg" Control="Back" Event="NewDialog" Value="LicenseAgreementDlg">1</Publish>
+
+      <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="1">Installed</Publish>
+      <Publish Dialog="CustomizeDlg" Control="Back" Event="NewDialog" Value="PrivacyDlg" Order="2">NOT Installed</Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg" Order="1"><![CDATA[VSInstalled]]></Publish>
+      <Publish Dialog="CustomizeDlg" Control="Next" Event="NewDialog" Value="DependencyCheckWarningDlg" Order="2">
+        <![CDATA[NOT VSInstalled]]>
+      </Publish>
+      <Publish Dialog="DependencyCheckWarningDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+      <Publish Dialog="DependencyCheckWarningDlg" Control="Next" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="1">NOT Installed </Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="CustomizeDlg" Order="2">WixUI_InstallMode = "Change"</Publish>
+      <Publish Dialog="VerifyReadyDlg" Control="Back" Event="NewDialog" Value="MaintenanceTypeDlg" Order="3"><![CDATA[Installed AND (WixUI_InstallMode <> "Change")]]></Publish>
+
+      <Publish Dialog="MaintenanceWelcomeDlg" Control="Next" Event="NewDialog" Value="MaintenanceTypeDlg">1</Publish>
+
+      <Publish Dialog="MaintenanceTypeDlg" Control="ChangeButton" Event="NewDialog" Value="CustomizeDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RepairButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="RemoveButton" Event="NewDialog" Value="VerifyReadyDlg">1</Publish>
+      <Publish Dialog="MaintenanceTypeDlg" Control="Back" Event="NewDialog" Value="MaintenanceWelcomeDlg">1</Publish>
+
+    </UI>
+
+    <!-- Properties for "Add or Remove Program Entries" -->
+    <Property Id="ARPCOMMENTS">Protocol Test Manager</Property>
+    <Property Id="ARPCONTACT">Microsoft Interop &amp; Testing Team</Property>
+
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramMenuFolder" >
+        <Directory Id="ApplicationProgramsMenuFolder" Name="Protocol Test Manager" />
+      </Directory>
+      <Directory Id="ProgramFiles64Folder">
+        <Directory Id="INSTALLFOLDER" Name="Protocol Test Manager" >
+          <Directory Id="BINFOLDER" Name="bin" />
+          <Directory Id="ETCFOLDER" Name="etc" >
+            <Directory Id="FILESERVERCONFIG" Name="fileserver" />
+            <Directory Id="SMBDCONFIG" Name="MS-SMBD" />
+            <Directory Id="RDPCLIENTCONFIG" Name="RDP-Client" />
+            <Directory Id="RDPSERVERCONFIG" Name="RDP-Server" />
+            <Directory Id="KERBEROSCONFIGFOLDER" Name="kerberos" />
+            <Directory Id="AZODCONFIGFOLDER" Name="MS-AZOD" />
+            <Directory Id="ADODCONFIGFOLDER" Name="MS-ADOD" />
+            <Directory Id="ADFSPIPCONFIGFOLDER" Name="MS-ADFSPIP" />
+            <Directory Id="ADFAMILYCONFIGFOLDER" Name="adfamily" />
+            <Directory Id="BRANCHCACHECONFIGFOLDER" Name="BranchCache" />
+          </Directory>
+          <Directory Id="LIBFOLDER" Name="lib" />
+          <Directory Id="DOCFOLDER" Name="doc" >
+            <Directory Id="FILESERVERDOCFOLDER" Name="fileserver" />
+            <Directory Id="SMBDDOCFOLDER" Name="MS-SMBD" />
+            <Directory Id="RDPCLIENTDOCFOLDER" Name="RDP-Client" />
+            <Directory Id="RDPSERVERDOCFOLDER" Name="RDP-Server" />
+            <Directory Id="KERBEROSDOCFOLDER" Name="kerberos" />
+            <Directory Id="AZODDOCFOLDER" Name="MS-AZOD" />
+            <Directory Id="ADODDOCFOLDER" Name="MS-ADOD" />
+            <Directory Id="ADFSPIPDOCFOLDER" Name="MS-ADFSPIP" />
+            <Directory Id="ADFAMILYDOCFOLDER" Name="adfamily" />
+            <Directory Id="BRANCHCACHEDOCFOLDER" Name="BranchCache" />
+          </Directory>
+          <Directory Id="DATAFOLDER" Name="data" >
+            <Directory Id="FILESERVERDATAFOLDER" Name="fileserver" />
+          </Directory>
+        </Directory>
+      </Directory>
+      <Directory Id="DesktopFolder" />
+    </Directory>
+
+    <!-- Application Shortcut -->
+    <DirectoryRef Id="ApplicationProgramsMenuFolder">
+      <Component Id="ApplicationShortcut" Guid="{EF05776E-73FA-43EC-92A8-69835FB97A61}">
+
+        <Shortcut Id="PTMStartMenuShortcut"
+                  Name="Protocol Test Manager"
+                  Description="Microsoft Protocol Test Manager"
+                  Target="[BINFOLDER]ProtocolTestManager.exe"
+                  WorkingDirectory="BINFOLDER"/>
+
+        <Shortcut Id="UninstallProduct"
+                  Name="Uninstall Microsoft Protocol Test Manager"
+                  Description="Uninstall Microsoft Protocol Test Manager"
+                  Target="[System64Folder]msiexec.exe"
+                  Arguments="/x [ProductCode]"/>
+        <RemoveFolder Id="ROOT_DIR" On="uninstall"/>
+
+        <RegistryValue Root="HKCU"
+                       Key="Software\Microsoft\ProtocolTestManager"
+                       Name="installed"
+                       Type="integer"
+                       Value="1"
+                       KeyPath="yes"/>
+      </Component>
+    </DirectoryRef>
+    <!-- Desktop shortcuts -->
+    <DirectoryRef Id="DesktopFolder">
+      <Component Id="DesktopShortcuts" Guid="{B99EF713-58C7-4E91-B49F-DEB54D993730}">
+        <Shortcut Id="PTMShortcut_Desktop"
+                  Name="Protocol Test Manager"
+                  Description="Protocol Test Manager"
+                  Target="[BINFOLDER]ProtocolTestManager.exe"
+                  WorkingDirectory="BINFOLDER"/>
+
+        <RegistryValue Id="PTMKeyPath_Desktop"
+                        Root="HKCU"
+                        Key="Software\Microsoft\ProtocolTestManager"
+                        Name="DesktopIcon"
+                        Type="integer"
+                        Value="1"
+                        KeyPath="yes" />
+      </Component>
+    </DirectoryRef>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents_bin" Directory="BINFOLDER">
+      <?if $(env.DEBUGVER) = 1?>
+      <Component Id="Microsoft.Protocols.TestManager.Detector.pdb" Guid="*" Feature="PTM_Feature">
+        <File Id="Microsoft.Protocols.TestManager.Detector.pdb"
+             Source="$(var.SRCDIR)\bin\Microsoft.Protocols.TestManager.Detector.pdb" />
+      </Component>
+      <Component Id="Microsoft.Protocols.TestManager.Kernel.pdb" Guid="*" Feature="PTM_Feature">
+        <File Id="Microsoft.Protocols.TestManager.Kernel.pdb"
+             Source="$(var.SRCDIR)\bin\Microsoft.Protocols.TestManager.Kernel.pdb" />
+      </Component>
+      <Component Id="ProtocolTestManager.pdb" Guid="*" Feature="PTM_Feature">
+        <File Id="ProtocolTestManager.pdb"
+             Source="$(var.SRCDIR)\bin\ProtocolTestManager.pdb" />
+      </Component>
+      <Component Id="PtmCli.pdb" Guid="*" Feature="PTM_Feature">
+        <File Id="PtmCli.pdb"
+              Source="$(var.SRCDIR)\bin\PtmCli.pdb" />
+      </Component>
+      <?endif ?>
+      <Component Id="ProtocolTestManager.exe" Guid="{D57A5D09-1B75-433D-890F-829E5C350276}" Feature="PTM_Feature">
+        <File Id="ProtocolTestManager.exe"
+              Source="$(var.SRCDIR)\bin\ProtocolTestManager.exe" />
+      </Component>
+      <Component Id="PtmCli.exe" Guid="{A471F7A0-3360-4750-80B0-E5FCAB4C6D9A}" Feature="PTM_Feature">
+        <File Id="PtmCli.exe"
+              Source="$(var.SRCDIR)\bin\PtmCli.exe" />
+      </Component>
+      <Component Id="Microsoft.Protocols.TestManager.Detector.dll" Guid="{FF3C5836-7D7F-4DA2-B7AF-8B91DBFBEB1F}" Feature="PTM_Feature">
+        <File Id="Microsoft.Protocols.TestManager.Detector.dll"
+              Source="$(var.SRCDIR)\bin\Microsoft.Protocols.TestManager.Detector.dll" />
+      </Component>
+      <Component Id="Microsoft.Protocols.TestManager.Kernel.dll" Guid="{3AFB35ED-20C3-491E-8BCD-7B42878E2521}" Feature="PTM_Feature">
+        <File Id="Microsoft.Protocols.TestManager.Kernel.dll"
+              Source="$(var.SRCDIR)\bin\Microsoft.Protocols.TestManager.Kernel.dll" />
+      </Component>
+      <Component Id="Microsoft.Protocols.TestManager.Detector.XML" Guid="{366135B7-AA9E-4B12-B1EB-C63FF8080E9D}" Feature="PTM_Feature">
+        <File Id="Microsoft.Protocols.TestManager.Detector.XML"
+              Source="$(var.SRCDIR)\bin\Microsoft.Protocols.TestManager.Detector.XML" />
+      </Component>
+      <Component Id="Microsoft.Protocols.TestManager.Kernel.XML" Guid="{A792E1AF-4BD2-415C-AE99-9271547793A4}" Feature="PTM_Feature">
+        <File Id="Microsoft.Protocols.TestManager.Kernel.XML"
+              Source="$(var.SRCDIR)\bin\Microsoft.Protocols.TestManager.Kernel.XML" />
+      </Component>
+      <Component Id="CommandLine.dll" Guid="{7AAF0E8D-7899-4F3A-8B7D-73A3A1CD93F4}" Feature="PTM_Feature">
+        <File Id="CommandLine.dll"
+              Source="$(var.SRCDIR)\bin\CommandLine.dll" />
+      </Component>
+      <Component Id="Newtonsoft.Json.dll" Guid="{94D59B9F-DA3E-4774-8C71-953F3842F0D8}" Feature="PTM_Feature">
+        <File Id="Newtonsoft.Json.dll"
+              Source="$(var.SRCDIR)\bin\Newtonsoft.Json.dll" />
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="ProductComponents_etc" Directory="ETCFOLDER">
+
+      <Component Id="TestSuiteIntro.xml" Guid="{9537EDC0-EAA5-48A6-A7FD-C104632875B4}" Feature="PTM_Feature">
+        <File Id="TestSuiteIntro.xml"
+              Source="$(var.SRCDIR)\etc\TestSuiteIntro.xml" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>

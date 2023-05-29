@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <ProjectGuid>{97B3E49C-7DD9-4642-9172-DC47DC9D4631}</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>Sdl7.0.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Protocols.TestTools">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="Microsoft.Protocols.TestTools.VSTS">
+      <SpecificVersion>False</SpecificVersion>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.DirectoryServices.Protocols" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\AssemblyInfo\SharedAssemblyInfo.cs">
+      <Link>SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="ADODTestConfig.cs" />
+    <Compile Include="IClientControlAdapter.cs" />
+    <Compile Include="IDCControlAdapter.cs" />
+    <Compile Include="ClientControlAdapter.cs" />
+    <Compile Include="MessageAnalyzerAdapter\IMessageAnalyzerAdapter.cs" />
+    <Compile Include="MessageAnalyzerAdapter\MAVerifyType.cs" />
+    <Compile Include="MessageAnalyzerAdapter\MAVerifyUtil.cs" />
+    <Compile Include="MessageAnalyzerAdapter\MessageAnalyzerAdapter.cs" />
+    <Compile Include="Util\ActiveDirectoryHelper.cs" />
+    <Compile Include="Util\EndpointRole.cs" />
+    <Compile Include="Util\PingClient.cs" />
+    <Compile Include="Util\TelnetLineStream.cs" />
+    <Compile Include="Util\TelnetClient.cs" />
+    <Compile Include="DCControlAdapter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Common\SetupRemoteSession.ps1" />
+    <Content Include="ClientControlAdapter\ChangeUserAcctPasswordLDAP.ps1" />
+    <Content Include="ClientControlAdapter\ChangeUserAcctPasswordSAMR.ps1" />
+    <Content Include="ClientControlAdapter\DeleteGroup.ps1" />
+    <Content Include="ClientControlAdapter\DeleteUserAcct.ps1" />
+    <Content Include="ClientControlAdapter\DetermineUserAcctMembershipLDAP.ps1" />
+    <Content Include="ClientControlAdapter\DetermineUserAcctMembershipSAMR.ps1" />
+    <Content Include="ClientControlAdapter\JoinDomainCreateAcctLDAP.ps1" />
+    <Content Include="ClientControlAdapter\JoinDomainCreateAcctSAMR.ps1" />
+    <Content Include="ClientControlAdapter\JoinDomainPredefAcct.ps1" />
+    <Content Include="ClientControlAdapter\LocateDomainController.ps1" />
+    <Content Include="ClientControlAdapter\ManageGroupsandTheirMemberships.ps1" />
+    <Content Include="ClientControlAdapter\ObtainUserAcctListLDAP.ps1" />
+    <Content Include="ClientControlAdapter\ProvisionUserAcctLDAP.ps1" />
+    <Content Include="ClientControlAdapter\ProvisionUserAcctSAMR.ps1" />
+    <Content Include="ClientControlAdapter\UnjoinDomain.ps1" />
+    <Content Include="ClientControlAdapter\IsJoinDomainSuccess.ps1" />
+    <Content Include="ClientControlAdapter\IsUnjoinDomainSuccess.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\MessageAnalyzerLibrary\MessageAnalyzerLibrary.csproj">
+      <Project>{e3b08663-c752-41cc-b2b7-43c69b8c1292}</Project>
+      <Name>MessageAnalyzerLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="AfterBuild">
+    <Copy SourceFiles="$(TargetDir)$(TargetFileName)" DestinationFolder="$(TestSuiteRoot)\drop\TestSuites\MS-ADOD\Bin\" />
+    <Copy SourceFiles="$(TargetDir)$(TargetName).pdb" DestinationFolder="$(TestSuiteRoot)\drop\TestSuites\MS-ADOD\Bin\" />
+  </Target>
+</Project>

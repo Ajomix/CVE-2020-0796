@@ -1,0 +1,187 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x64</Platform>
+    <ProductVersion>3.0</ProductVersion>
+    <ProjectGuid>{6ffa1a5b-ed4c-4954-9199-880c15c72866}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>ProtocolTestManager</OutputName>
+    <OutputType>Package</OutputType>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+    <DefineConstants>Debug</DefineConstants>
+    <WixVariables>
+    </WixVariables>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
+    <OutputPath>bin\$(Configuration)\</OutputPath>
+    <IntermediateOutputPath>obj\$(Configuration)\</IntermediateOutputPath>
+  </PropertyGroup>
+  <Import Project="$(WixTargetsPath)" />
+  <ItemGroup>
+    <Compile Include="ADFSPIPPlugin.wxs" />
+    <Compile Include="BranchCachePlugin.wxs" />
+    <Compile Include="RDPClientPlugin.wxs" />
+    <Compile Include="RDPServerPlugin.wxs" />
+    <Compile Include="AZODPlugin.wxs" />
+    <Compile Include="ADODPlugin.wxs" />
+    <Compile Include="KerberosPlugin.wxs" />
+    <Compile Include="ADFamily.wxs" />
+    <Compile Include="Product.wxs" />
+    <Compile Include="PrivacyDlg.wxs" />
+    <Compile Include="ProtoSDK.wxs" />
+    <Compile Include="FileServerPlugin.wxs" />
+    <Compile Include="DependencyCheckWarningDlg.wxs" />
+    <Compile Include="SMBDPlugin.wxs" />
+    <EmbeddedResource Include="ProtocolTestManager.wxl" />
+    <Content Include="License.rtf" />
+  </ItemGroup>
+  <ItemGroup>
+    <WixExtension Include="WixVSExtension">
+      <HintPath>$(WIX)\bin\WixVSExtension.dll</HintPath>
+      <Name>WixVSExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUtilExtension">
+      <HintPath>$(WIX)\bin\WixUtilExtension.dll</HintPath>
+      <Name>WixUtilExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixNetFxExtension">
+      <HintPath>$(WIX)\bin\WixNetFxExtension.dll</HintPath>
+      <Name>WixNetFxExtension</Name>
+    </WixExtension>
+    <WixExtension Include="WixUIExtension">
+      <HintPath>$(WIX)\bin\WixUIExtension.dll</HintPath>
+      <Name>WixUIExtension</Name>
+    </WixExtension>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Kernel\Kernel.csproj">
+      <Name>Microsoft.Protocols.TestManager.Kernel</Name>
+      <Project>{179FFB40-6987-4976-8C26-7D89A5ADF50D}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\UI\UI.csproj">
+      <Name>ProtocolTestManager</Name>
+      <Project>{FE998190-5B44-4816-9A65-295E8A1EBBA1}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\PtmCli\PtmCli.csproj">
+      <Name>PtmCli</Name>
+      <Project>{80AC8EE5-435F-4586-AF1B-25E7B109F918}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\PropertyValueDetector\PropertyValueDetector.csproj">
+      <Name>Microsoft.Protocols.TestManager.Detector</Name>
+      <Project>{7982ACF0-F1A4-4996-A339-641CAFA093CE}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\FileServerPlugin\FileServerPlugin\FileServerPlugin.csproj">
+      <Name>FileServerPlugin</Name>
+      <Project>{20855E41-DDBD-4886-AB6B-135005475CFF}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\SMBDPlugin\SMBDPlugin\SMBDPlugin.csproj">
+      <Name>SMBDPlugin</Name>
+      <Project>{E0D49562-5489-4807-B906-B841696716AE}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\KerberosPlugin\KerberosPlugin\KerberosPlugin.csproj">
+      <Name>KerberosPlugin</Name>
+      <Project>{A18054D7-60B6-4D02-A95C-F752A61DC8DD}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\ADFamilyPlugin\ADFamilyPlugin\ADFamilyPlugin.csproj">
+      <Name>ADFamilyPlugin</Name>
+      <Project>{E18054D7-60B6-4D02-A95C-F752A61DC8D8}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\RDPClientPlugin\RDPClientPlugin\RDPClientPlugin.csproj">
+      <Name>RDPClientPlugin</Name>
+      <Project>{4DDC6D1E-6DEA-4DA5-AFF9-D8F5CB90800F}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\RDPServerPlugin\RDPServerPlugin\RDPServerPlugin.csproj">
+      <Name>RDPServerPlugin</Name>
+      <Project>{10425342-C543-487F-8D5B-F26F636F2D45}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\AZODPlugin\AZODPlugin\AZODPlugin.csproj">
+      <Name>AZODPlugin</Name>
+      <Project>{424C6D1E-6DEA-4DA5-AFF9-D8F5CB9081BF}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\ADODPlugin\ADODPlugin\ADODPlugin.csproj">
+      <Name>ADODPlugin</Name>
+      <Project>{4A226949-08A5-4D5A-8DBD-674C22377DF7}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\ADFSPIPPlugin\ADFSPIPPlugin\ADFSPIPPlugin.csproj">
+      <Name>ADFSPIPPlugin</Name>
+      <Project>{497B4EC6-DAFC-4AEA-BE66-13E17E147199}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+    <ProjectReference Include="..\Plugins\BranchCachePlugin\BranchCachePlugin\BranchCachePlugin.csproj">
+      <Name>BranchCachePlugin</Name>
+      <Project>{86BE87C6-846E-48FD-9676-BE6D1FC64C07}</Project>
+      <Private>True</Private>
+      <DoNotHarvest>True</DoNotHarvest>
+      <RefProjectOutputGroups>Binaries;Content;Satellites</RefProjectOutputGroups>
+      <RefTargetDir>INSTALLLOCATION</RefTargetDir>
+    </ProjectReference>
+  </ItemGroup>
+  <!--
+	To modify your build process, add your task inside one of the targets below and uncomment it.
+	Other similar extension points exist, see Wix.targets.
+	<Target Name="BeforeBuild">
+	</Target>
+  	-->
+  <Target Name="AfterBuild">
+    <Copy Condition="$(FORDEBUG)==1" SourceFiles="$(TargetDir)\en-us\$(TargetFileName)" DestinationFiles="$(TestSuiteRoot)\drop\ProtocolTestManager\installer\ProtocolTestManager_ForDebug.msi" />
+    <Copy Condition="$(FORDEBUG)!=1" SourceFiles="$(TargetDir)\en-us\$(TargetFileName)" DestinationFolder="$(TestSuiteRoot)\drop\ProtocolTestManager\installer\" />
+  </Target>
+</Project>
